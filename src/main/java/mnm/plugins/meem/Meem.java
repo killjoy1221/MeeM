@@ -50,21 +50,25 @@ public class Meem {
 
                     return CommandResult.success();
                 })
-                .child(CommandSpec.builder()
-                        .permission("meem.gc")
-                        .description(Text.of("Runs garbage collection to free up memory. This may cause a lag spike."))
-                        .executor((src, args) -> {
-                            System.gc();
-                            src.sendMessage(Text.of(TextColors.GRAY, "GC has completed."));
-                            return CommandResult.success();
-                        })
-                        .build(), "gc")
                 .build(), "mem");
+        Sponge.getCommandManager().register(this, CommandSpec.builder()
+                .permission("meem.gc")
+                .description(Text.of("Runs garbage collection to free up memory. ", TextColors.RED, "This may cause a lag spike."))
+                .executor((src, args) -> {
+                    long free1 = Runtime.getRuntime().freeMemory();
+                    System.gc();
+                    long free2 = Runtime.getRuntime().freeMemory();
+
+                    String freed = formatBytes(free2 - free1);
+                    src.sendMessage(Text.of(TextColors.GRAY, "GC has completed. Freed ", freed));
+                    return CommandResult.success();
+                })
+                .build(), "gc");
     }
 
     private static String formatBytes(long bytes) {
         int unit = 1024;
-        if (bytes < unit) {
+        if (Math.abs(bytes) < unit) {
             return bytes + " B";
         }
         int exp = (int) (Math.log(bytes) / Math.log(unit));
