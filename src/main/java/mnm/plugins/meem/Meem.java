@@ -9,6 +9,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColor;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 @Plugin(
         id = "meem",
@@ -53,7 +54,8 @@ public class Meem {
                 .build(), "mem");
         Sponge.getCommandManager().register(this, CommandSpec.builder()
                 .permission("meem.gc")
-                .description(Text.of("Runs garbage collection to free up memory. ", TextColors.RED, "This may cause a lag spike."))
+                .description(Text.of("Runs garbage collection to free up memory. ",
+                        TextColors.RED, TextStyles.BOLD, "This may cause a lag spike."))
                 .executor((src, args) -> {
                     long free1 = Runtime.getRuntime().freeMemory();
                     System.gc();
